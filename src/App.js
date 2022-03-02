@@ -1,30 +1,18 @@
-import react , {useState, useEffect} from "react" 
-import axios from "axios";
-import './App.css';
+import "./App.css";
+import Homepage from "./Pages/Homepage";
+import Chatpage from "./Pages/Chatpage";
+import {Routes, Route} from "react-router-dom";
 
 function App() {
-
-  const [chats , setChats] = useState([]);
-  
-    const fetchChats = async()=>{
-
-    const {data} = await axios.get("/api/chats");
-    console.log(data)
-    setChats(data);
-
-  }
-
-  useEffect(()=>{
-
-    fetchChats();
-    
-  },[])
   return (
     <div className="App">
-     <h1 > Hello </h1>
-     {chats.map((c)=>(
-       <h1>{c.chatName}</h1>
-     ))}
+      <Routes>
+        <Route path="/" element={<Homepage/>} exact />
+        <Route path="/chats" element={<Chatpage/>} />
+        <Route path="*" element={<Homepage/>} />
+
+      </Routes>
+      
     </div>
   );
 }
