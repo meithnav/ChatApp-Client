@@ -48,6 +48,7 @@ const Signup = () => {
       return;
     }
     console.log(name, email, password, pic);
+    
     try {
       const config = {
         headers: {
@@ -72,9 +73,12 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
+
       localStorage.setItem("userInfo", JSON.stringify(data));
       setPicLoading(false);
+
       navigate("/chats");
+
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -100,13 +104,13 @@ const Signup = () => {
       });
       return;
     }
-    console.log(pics);
+    // console.log(pics);
     if (pics.type === "image/jpeg" || pics.type === "image/png") {
       const data = new FormData();
       data.append("file", pics);
       data.append("upload_preset", "chat-app");
-      data.append("cloud_name", "piyushproj");
-      fetch("https://api.cloudinary.com/v1_1/piyushproj/image/upload", {
+      data.append("cloud_name", "dmpnxmwnr");
+      fetch("https://api.cloudinary.com/v1_1/dmpnxmwnr/image/upload", {
         method: "post",
         body: data,
       })
