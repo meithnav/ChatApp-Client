@@ -9,14 +9,14 @@ import axios from "axios";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import ProfileModal from "./miscellaneous/ProfileModal";
 import ScrollableChat from "./ScrollableChat";
-// import Lottie from "react-lottie";
-import Lottie from "lottie-react";
+import Lottie from "react-lottie";
+// import {Lottie} from "lottie-react";
 import animationData from "../animations/typing.json";
 
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
-const ENDPOINT = "http://localhost:4000"; // "https://talk-a-tive.herokuapp.com"; -> After deployment
+const ENDPOINT = "http://localhost:4000"; // "https://allChat.herokuapp.com"; -> After deployment
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -90,6 +90,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
           config
         );
+
+        
         socket.emit("new message", data);
         setMessages([...messages, data]);
       } catch (error) {
@@ -109,7 +111,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket = io(ENDPOINT);
     socket.emit("setup", user);
     socket.on("connected", () => setSocketConnected(true));
-    socket.on("typing", () => setIsTyping(true));
+    socket.on("typing", () => setIsTyping(true)); // call it here and set the flags 
     socket.on("stop typing", () => setIsTyping(false));
 
     // eslint-disable-next-line
@@ -126,13 +128,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("message recieved", (newMessageRecieved) => {
       if (
         !selectedChatCompare || // if chat is not selected or doesn't match current chat
-        selectedChatCompare._id !== newMessageRecieved.chat._id
+        selectedChatCompare._id !== newMessageRecieved.chat._id // if the chat is already opened then we won't give it notifi..
       ) {
-        if (!notification.includes(newMessageRecieved)) {
-          setNotification([newMessageRecieved, ...notification]);
-          setFetchAgain(!fetchAgain);
-        }
+          if (!notification.includes(newMessageRecieved)) {
+            setNotification([newMessageRecieved, ...notification]);
+            setFetchAgain(!fetchAgain);
+          }
+
       } else {
+        // if the user is on the same chat then no noti just add to the chat
         setMessages([...messages, newMessageRecieved]);
       }
     });
@@ -147,6 +151,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setTyping(true);
       socket.emit("typing", selectedChat._id);
     }
+
+    // close typing after 3s if user is not typing anything
     let lastTypingTime = new Date().getTime();
     var timerLength = 3000;
     setTimeout(() => {
