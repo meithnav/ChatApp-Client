@@ -104,11 +104,11 @@ const Signup = () => {
       });
       return;
     }
-    // console.log(pics);
+    console.log(pics);
     if (pics.type === "image/jpeg" || pics.type === "image/png") {
       const data = new FormData();
       data.append("file", pics);
-      data.append("upload_preset", "chat-app");
+      data.append("upload_preset", "chatApp");
       data.append("cloud_name", "dmpnxmwnr");
       fetch("https://api.cloudinary.com/v1_1/dmpnxmwnr/image/upload", {
         method: "post",
